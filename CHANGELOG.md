@@ -43,6 +43,17 @@ ask your coding agent to use `$dmr-upgrade` to upgrade a project.
 - Added `MsgspecSerializer.enable_component_gc` flag to optionally
   enable the GC for the component parsing model, #1697
 
+#### OpenAPI
+
+- Added `HeaderSpec.type` to document non-string response headers.
+  Throttling `Retry-After` and `X-RateLimit-*` headers are now
+  documented as integers with examples instead of strings, #1706
+
+#### Content negotiation
+
+- Added `Parser.decodes_into_model` flag for parsers
+  that decode bodies directly into models, #1740
+
 ### Bugfixes
 
 #### Auth and security
@@ -50,6 +61,12 @@ ask your coding agent to use `$dmr-upgrade` to upgrade a project.
 - Fixed `jwt_expiration` and `jwt_refresh_expiration` passed to `as_view`
   of the cookie `concrete_views` changing the tokens, but not their cookies.
   They are typed `as_view` arguments now and are set on the class, #1690
+
+#### Components and serializers
+
+- Fixed `BodyMsgspec` being allowed with parsers
+  that don't decode into models, like `JsonParser` or forms.
+  It raises `EndpointMetadataError` now, #1740
 
 #### Controllers and endpoints
 
@@ -65,6 +82,12 @@ ask your coding agent to use `$dmr-upgrade` to upgrade a project.
   generated clients parse a body that doesn't exist, #1733
 - Fixed a `$ref` outside of `#/components/schemas/` in a `Query`, `Headers`,
   `Path` or `Cookies` model raising `KeyError` when building the schema, #1708
+
+#### Throttling
+
+- Fixed `SyncRedis` and `AsyncRedis` with `SimpleRate` reporting
+  a negative reset (`X-RateLimit-Reset: -2`) for a throttle with
+  no requests in the current window, other backends report the full window
 
 ### Misc
 
